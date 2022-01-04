@@ -10,12 +10,20 @@ export async function createCharacter(character){
     };
 
     // use the newCharacter to create a single new character for this user in supabase
-    return checkError(response);
+    const dbCharacter = await client
+        .from ('characters')
+        .insert(newCharacter);
+    return checkError(dbCharacter);
 }
 
 export async function updateHead(value){
-    const currentUserId = client.auth.user().id;
-
+    //const currentUserId = client.auth.user().id;
+    const user = await getUser();
+    const response = await client
+        .from('characters')
+        .update({ head: value })
+        .match({ user_id: user.user.id })
+        .single();
     // in supabase, update the head property
     // for the character whose user_id match's the currently logged in user's id
 
@@ -24,8 +32,13 @@ export async function updateHead(value){
 
 
 export async function updateMiddle(value){
-    const currentUserId = client.auth.user().id;
-
+    //const currentUserId = client.auth.user().id;
+    const user = await getUser();
+    const response = await client
+        .from('characters')
+        .update({ middle: value })
+        .match({ user_id: user.user.id })
+        .single();
     // in supabase, update the middle property
     // for the character whose user_id match's the currently logged in user's id
 
@@ -34,8 +47,13 @@ export async function updateMiddle(value){
 
 
 export async function updateBottom(value){
-    const currentUserId = client.auth.user().id;
-
+    //const currentUserId = client.auth.user().id;
+    const user = await getUser();
+    const response = await client
+        .from('characters')
+        .update({ bottom: value })
+        .match({ user_id: user.user.id })
+        .single();
     // in supabase, update the bottom property
     // for the character whose user_id match's the currently logged in user's id
 
@@ -43,8 +61,14 @@ export async function updateBottom(value){
 }
 
 export async function updateChatchphrases(value){
-    const currentUserId = client.auth.user().id;
+    //const currentUserId = client.auth.user().id;
+    const user = await getUser();
 
+    const response = await client
+        .from('characters')
+        .update({ chatchphrases: chatchphrasesArray })
+        .match({ user_id: user.user.id })
+        .single();
     // in supabase, update the catchphrases property
     // for the character whose user_id match's the currently logged in user's id
 
