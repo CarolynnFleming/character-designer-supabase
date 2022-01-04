@@ -60,7 +60,7 @@ export async function updateBottom(value){
     return checkError(response);    
 }
 
-export async function updateChatchphrases(value){
+export async function updateChatchphrases(chatchphrasesArray){
     //const currentUserId = client.auth.user().id;
     const user = await getUser();
 
