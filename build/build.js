@@ -2,7 +2,7 @@ import {
     checkAuth, 
     getCharacter,
     logout, 
-    createCharacter,
+    createTestCharacter,
     updateBottom,
     updateHead,
     updateMiddle,
@@ -28,11 +28,15 @@ let headCount = 0;
 let middleCount = 0;
 let bottomCount = 0;
 
+
 headDropdown.addEventListener('change', async() => {
     // increment the correct count in state
     headCount++;
     // update the head in supabase with the correct data
-    await updateHead(headDropdown.value);
+    const chooseHead = headDropdown.value;
+
+    await updateHead(chooseHead);
+
     refreshData();
 });
 
@@ -41,7 +45,9 @@ middleDropdown.addEventListener('change', async() => {
     // increment the correct count in state
     middleCount++;
     // update the middle in supabase with the correct data
-    await updateMiddle(middleDropdown.value);
+    const chooseMiddle = middleDropdown.value;
+
+    await updateMiddle(chooseMiddle);
     refreshData();
 });
 
@@ -50,20 +56,25 @@ bottomDropdown.addEventListener('change', async() => {
     // increment the correct count in state
     bottomCount++;
     // update the bottom in supabase with the correct data
-    await updateBottom(bottomDropdown.value);
+    const chooseBottom = bottomDropdown.value;
+
+    await updateBottom(chooseBottom);
+
     refreshData();
 });
 
 catchphraseButton.addEventListener('click', async() => {
-    catchphraseInput.value = '';
 
     // go fetch the old catch phrases
     const character = await getCharacter();
     // update the catchphrases array locally by pushing the new catchphrase into the old array
-    character.chatchphrases.push(catchphraseInput.value);
+    character.catchphrases.push(catchphraseInput.value);
     // update the catchphrases in supabase by passing the mutated array to the updateCatchphrases function
     await updateChatchphrases(character.catchphrases);
     refreshData();
+
+    catchphraseInput.value = '';
+
 });
 
 window.addEventListener('load', async() => {
@@ -77,18 +88,15 @@ window.addEventListener('load', async() => {
     //const userCharacter = await getCharacter();
     // on load, attempt to fetch this user's character
     if (!character) {
-        const newCharacter = await createCharacter();
-    
+        await createTestCharacter();
     // if this user turns out not to have a character
     // create a new character with correct defaults for all properties (head, middle, bottom, catchphrases)
     // and put the character's catchphrases in state (we'll need to hold onto them for an interesting reason);
 
     // then call the refreshData function to set the DOM with the updated data
-        refreshData(newCharacter);} else {
-
-    
-        refreshData();
     }
+    refreshData();
+    
 });
 
 logoutButton.addEventListener('click', () => {
@@ -117,6 +125,13 @@ async function fetchAndDisplayCharacter() {
         bottomEl.style.backgroundImage = `url(../assets/${character.bottom}-pants.png)`;
     }
     // loop through catchphrases and display them to the dom (clearing out old dom if necessary)
+    chatchphrasesEl.textContent = '';
+    for (let catchphrase of character.catchphrases) {
+        const phraseEl = document.createElement('p');
+
+        phraseEl.textContent = catchphrase;
+        chatchphrasesEl.appendChild(phraseEl);
+    }
 }
 
 function refreshData() {
