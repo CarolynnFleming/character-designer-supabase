@@ -16,7 +16,7 @@ export async function createCharacter(){
             {
                 head: 'duck',
                 middle: 'blue',
-                bottom: 'pants',
+                bottom: 'bottom',
                 catchphrases: []
             }
 
