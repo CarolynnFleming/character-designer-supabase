@@ -3,26 +3,33 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsI
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-export async function createCharacter(character){
-    const newCharacter = {
-        ...character, 
-        user_id: client.auth.user().id, 
-    };
+export async function createCharacter(){
+   // const newCharacter = {
+        //...character, 
+        //user_id: client.auth.user().id, 
+    //};
 
     // use the newCharacter to create a single new character for this user in supabase
-    const dbCharacter = await client
-        .from ('characters')
-        .insert(newCharacter);
-    return checkError(dbCharacter);
+    const response = await client
+        .from('characters')
+        .insert([
+            {
+                head: 'duck',
+                middle: 'blue',
+                bottom: 'bottom',
+                catchphrases: []
+            }
+
+        ]);
+    return checkError(response);
 }
 
 export async function updateHead(value){
     //const currentUserId = client.auth.user().id;
-    const user = await getUser();
     const response = await client
         .from('characters')
         .update({ head: value })
-        .match({ user_id: user.user.id })
+        .match({ user_id: client.auth.user().id })
         .single();
     // in supabase, update the head property
     // for the character whose user_id match's the currently logged in user's id
@@ -33,11 +40,10 @@ export async function updateHead(value){
 
 export async function updateMiddle(value){
     //const currentUserId = client.auth.user().id;
-    const user = await getUser();
     const response = await client
         .from('characters')
         .update({ middle: value })
-        .match({ user_id: user.user.id })
+        .match({ user_id: client.auth.user().id })
         .single();
     // in supabase, update the middle property
     // for the character whose user_id match's the currently logged in user's id
@@ -48,11 +54,10 @@ export async function updateMiddle(value){
 
 export async function updateBottom(value){
     //const currentUserId = client.auth.user().id;
-    const user = await getUser();
     const response = await client
         .from('characters')
         .update({ bottom: value })
-        .match({ user_id: user.user.id })
+        .match({ user_id: client.auth.user().id })
         .single();
     // in supabase, update the bottom property
     // for the character whose user_id match's the currently logged in user's id
@@ -61,13 +66,12 @@ export async function updateBottom(value){
 }
 
 export async function updateChatchphrases(chatchphrasesArray){
-    //const currentUserId = client.auth.user().id;
-    const user = await getUser();
+    //const currentUserId = client.auth.user().id
 
     const response = await client
         .from('characters')
         .update({ chatchphrases: chatchphrasesArray })
-        .match({ user_id: user.user.id })
+        .match({ user_id: client.auth.user().id })
         .single();
     // in supabase, update the catchphrases property
     // for the character whose user_id match's the currently logged in user's id

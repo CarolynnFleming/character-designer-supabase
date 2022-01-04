@@ -58,7 +58,7 @@ catchphraseButton.addEventListener('click', async() => {
     catchphraseInput.value = '';
 
     // go fetch the old catch phrases
-    const chatchphrasesEl = await getCharacter();
+    const character = await getCharacter();
     // update the catchphrases array locally by pushing the new catchphrase into the old array
     character.chatchphrases.push(catchphraseInput.value);
     // update the catchphrases in supabase by passing the mutated array to the updateCatchphrases function
@@ -67,23 +67,28 @@ catchphraseButton.addEventListener('click', async() => {
 });
 
 window.addEventListener('load', async() => {
-    let character = {
-        head: 'duck',
-        middle: 'blue',
-        bottom: 'pants',
-        catchphrases: []
-    };
-    const userCharacter = await getCharacter();
+    const character = await getCharacter();
+    //let character = {
+      //  head: 'duck',
+        //middle: 'blue',
+        //bottom: 'pants',
+        //catchphrases: []
+    //};
+    //const userCharacter = await getCharacter();
     // on load, attempt to fetch this user's character
-    if (!userCharacter) {
-        createCharacter(character);
-    }
+    if (!character) {
+        const newCharacter = await createCharacter();
+    
     // if this user turns out not to have a character
     // create a new character with correct defaults for all properties (head, middle, bottom, catchphrases)
     // and put the character's catchphrases in state (we'll need to hold onto them for an interesting reason);
 
     // then call the refreshData function to set the DOM with the updated data
-    refreshData();
+        refreshData(newCharacter);} else {
+
+    
+        refreshData();
+    }
 });
 
 logoutButton.addEventListener('click', () => {
