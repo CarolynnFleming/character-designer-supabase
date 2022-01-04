@@ -2,7 +2,7 @@ import {
     checkAuth, 
     getCharacter,
     logout, 
-    createCharacter,
+    createTestCharacter,
     updateBottom,
     updateHead,
     updateMiddle,
@@ -35,7 +35,7 @@ headDropdown.addEventListener('change', async() => {
     // update the head in supabase with the correct data
     const chooseHead = headDropdown.value;
 
-    updateHead(chooseHead);
+    await updateHead(chooseHead);
 
     refreshData();
 });
@@ -47,7 +47,7 @@ middleDropdown.addEventListener('change', async() => {
     // update the middle in supabase with the correct data
     const chooseMiddle = middleDropdown.value;
 
-    updateMiddle(chooseMiddle);
+    await updateMiddle(chooseMiddle);
     refreshData();
 });
 
@@ -58,7 +58,7 @@ bottomDropdown.addEventListener('change', async() => {
     // update the bottom in supabase with the correct data
     const chooseBottom = bottomDropdown.value;
 
-    updateBottom(chooseBottom);
+    await updateBottom(chooseBottom);
 
     refreshData();
 });
@@ -125,6 +125,7 @@ async function fetchAndDisplayCharacter() {
         bottomEl.style.backgroundImage = `url(../assets/${character.bottom}-pants.png)`;
     }
     // loop through catchphrases and display them to the dom (clearing out old dom if necessary)
+    chatchphrasesEl.textContent = '';
     for (let catchphrase of character.catchphrases) {
         const phraseEl = document.createElement('p');
 
